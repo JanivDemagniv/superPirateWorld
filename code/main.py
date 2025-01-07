@@ -1,7 +1,6 @@
 from setting import *
 from level import Level
 from pytmx.util_pygame import load_pygame
-from os.path import join
 
 class Game:
     def __init__(self):
