@@ -2,10 +2,15 @@ from setting import *
 from game_timer import Timer
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self,pos, groups, collision_sprites , semi_collision_sprites):
+    def __init__(self,pos, groups, collision_sprites , semi_collision_sprites, frames):
         super().__init__(groups)
-        self.image = pygame.image.load(join('graphics','player','idle','0.png'))
+        #general
         self.z = Z_LAYERS['main']
+
+        #image
+        self.frames,self.frame_index = frames,0
+        self.state,self.facing_right = 'idle',True
+        self.image = self.frames[self.state][self.frame_index]
 
         #rect
         self.rect = self.image.get_frect(topleft = pos)
@@ -39,8 +44,10 @@ class Player(pygame.sprite.Sprite):
         if not self.timers['wall jump'].active:
             if keys[pygame.K_RIGHT]:
                 input_vector.x += 1
+                self.facing_right = True
             if keys[pygame.K_LEFT]:
                 input_vector.x -= 1
+                self.facing_right = False
             if keys[pygame.K_DOWN]:
                 self.timers['platform skip'].activate()
 
@@ -79,7 +86,6 @@ class Player(pygame.sprite.Sprite):
         
         self.rect.center = self.hitbox_rect.center
             
-
     def platform_move(self, dt):
         if self.platform:
             self.hitbox_rect.topleft += self.platform.direction * self.platform.speed * dt
@@ -130,15 +136,22 @@ class Player(pygame.sprite.Sprite):
                         if self.direction.y > 0:
                             self.direction.y = 0    
                 
-
     def update_timers(self):
         for timer in self.timers.values():
             timer.update()
 
+    def animate(self,dt):
+        self.frame_index += ANIMATION_SPEED * dt
+        self.image = self.frames[self.state][int(self.frame_index % len(self.frames[self.state]))]
+        self.image = self.image if self.facing_right else pygame.transform.flip(self.image,True,False)
+
     def update(self, dt):
         self.old_rect = self.hitbox_rect.copy()
         self.update_timers()
+
         self.input()
         self.move(dt)
         self.platform_move(dt)
         self.check_contact()
+
+        self.animate(dt)
