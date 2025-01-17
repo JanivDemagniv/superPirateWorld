@@ -29,6 +29,15 @@ class Level:
                     case _: z = Z_LAYERS['main']
 
                 Sprite((x * TILE_SIZE,y * TILE_SIZE),surf, groups, z)
+
+        #bg details
+        for obj in tmx_map.get_layer_by_name('BG details'):
+            if obj.name == 'static':
+                Sprite((obj.x ,obj.y),obj.image, self.all_sprites, Z_LAYERS['bg tiles'])
+            else:
+                AnimatedSprite((obj.x,obj.y),level_frames[obj.name],self.all_sprites,Z_LAYERS['bg tiles'])
+                if obj.name == 'candle':
+                    AnimatedSprite((obj.x,obj.y) + vector(-20,-20),level_frames['candle_light'],self.all_sprites,Z_LAYERS['bg tiles'])
         
         #objects
         for obj in tmx_map.get_layer_by_name('Objects'):
@@ -40,7 +49,7 @@ class Level:
                     semi_collision_sprites = self.semi_coliision_sprites,
                     frames = level_frames['player'])
             else:
-                if obj.name in ('barrel','crate',):
+                if obj.name in ('barrel','crate'):
                     Sprite((obj.x,obj.y),obj.image,(self.all_sprites,self.collision_sprites))
                 else:
                     #frames
@@ -73,7 +82,7 @@ class Level:
                     end_pos = (obj.x + obj.width / 2, obj.y + obj.height)
                 speed = obj.properties['speed']
                 MovingSprite((self.all_sprites,self.semi_coliision_sprites), start_pos, end_pos, move_dir, speed)
-
+        
 
     def run(self, dt):
         self.display_surface.fill('black')
