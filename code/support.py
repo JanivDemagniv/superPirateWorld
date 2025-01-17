@@ -2,7 +2,7 @@ import pygame.locals
 from setting import *
 
 def import_image(*path,alpah = True,format = 'png'):
-    full_path = join(*path) * f'{format}'
+    full_path = join(*path) + f'.{format}'
     return pygame.image.load(full_path).convert_alpha() if alpah else pygame.image.load(full_path).convert()
 
 def import_folder(*path):
