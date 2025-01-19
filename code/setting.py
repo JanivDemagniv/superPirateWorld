@@ -2,6 +2,7 @@ import pygame, sys
 from pygame.math import Vector2 as vector
 from os.path import join
 from os import walk
+from random import choice
 
 WINDOW_WIDTH,WINDOW_HIEGHT = 1280,720
 TILE_SIZE = 64
