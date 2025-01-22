@@ -203,7 +203,7 @@
  <objectgroup id="2" name="Water" visible="0">
   <object id="2" name="water" x="0" y="640" width="2560" height="320"/>
  </objectgroup>
- <objectgroup id="8" name="Data" visible="0">
+ <objectgroup id="8" name="Data">
   <object id="28" name="Data" x="0" y="0" width="64" height="64">
    <properties>
     <property name="bg" value=""/>
