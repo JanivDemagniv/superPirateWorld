@@ -18,7 +18,7 @@ class Game:
         self.ui = UI(self.font,self.ui_frames)
         self.data = Data(self.ui)
         self.tmx_maps = {
-            0: load_pygame(join('data','levels','0.tmx')),
+            0: load_pygame(join('data','levels','omni.tmx')),
             1: load_pygame(join('data','levels','1.tmx')),
             2: load_pygame(join('data','levels','2.tmx')),
             3: load_pygame(join('data','levels','3.tmx')),
@@ -26,11 +26,12 @@ class Game:
             5: load_pygame(join('data','levels','5.tmx')),
             }
         self.tmx_overworld = load_pygame(join('data','overworld','overworld.tmx'))
-        self.current_stage = Level(self.tmx_maps[0], self.level_frames, self.data, self.switch_stage)
+        self.current_stage = Level(self.tmx_maps[0], self.level_frames, self.data, self.audio_files, self.switch_stage)
+        self.bg_music.play(-1)
 
     def switch_stage(self,target,unlock = 0):
         if target == 'level':
-            self.current_stage = Level(self.tmx_maps[self.data.current_level], self.level_frames, self.data, self.switch_stage)
+            self.current_stage = Level(self.tmx_maps[self.data.current_level], self.level_frames, self.data,self.audio_files, self.switch_stage)
             pass
         else:
             if unlock > 0:
@@ -83,6 +84,22 @@ class Game:
             'icon': import_sub_folders('graphics','overworld','icon')
         }
 
+        self.audio_files = {
+            'coin': pygame.mixer.Sound(join('audio','coin.wav')),
+            'attack':pygame.mixer.Sound(join('audio','attack.wav')),
+            'jump': pygame.mixer.Sound(join('audio','jump.wav')),
+            'damage':pygame.mixer.Sound(join('audio','damage.wav')),
+            'pearl': pygame.mixer.Sound(join('audio','pearl.wav'))
+        }
+
+        self.bg_music = pygame.mixer.Sound(join('audio','starlight_city.mp3'))
+        self.bg_music.set_volume(0.5)
+
+    def check_game_over(self):
+        if self.data.health <= 0:
+            pygame.quit()
+            sys.exit()
+
     def run(self):
         while True:
             dt = self.clock.tick() / 1000
@@ -91,6 +108,7 @@ class Game:
                     pygame.quit()
                     sys.exit()
             
+            self.check_game_over()
             self.current_stage.run(dt)
             self.ui.update(dt)
             pygame.display.update()
