@@ -26,13 +26,13 @@ class Game:
             5: load_pygame(join('data','levels','5.tmx')),
             }
         self.tmx_overworld = load_pygame(join('data','overworld','overworld.tmx'))
-        self.current_stage = Level(self.tmx_maps[0], self.level_frames, self.data, self.audio_files, self.switch_stage)
+        # self.current_stage = Level(self.tmx_maps[0], self.level_frames, self.data, self.audio_files, self.switch_stage)
+        self.current_stage = Overworld(self.tmx_overworld, self.data,self.overworld_frames, self.switch_stage)
         self.bg_music.play(-1)
 
     def switch_stage(self,target,unlock = 0):
         if target == 'level':
             self.current_stage = Level(self.tmx_maps[self.data.current_level], self.level_frames, self.data,self.audio_files, self.switch_stage)
-            pass
         else:
             if unlock > 0:
                 self.data.unlock_level = unlock
@@ -97,8 +97,8 @@ class Game:
 
     def check_game_over(self):
         if self.data.health <= 0:
-            pygame.quit()
-            sys.exit()
+            self.switch_stage('',self.data.unlock_level)
+            self.data.health = 5
 
     def run(self):
         while True:
