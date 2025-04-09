@@ -14,11 +14,16 @@ class Tooth(pygame.sprite.Sprite):
         self.speed = 200
 
         self.hit_timer = Timer(250)
+        self.health = 2
 
     def reverse(self):
         if not self.hit_timer.active:
             self.direction *= -1
-            self.hit_timer.activate()
+            self.health -= 1
+            if self.health > 0:
+                self.hit_timer.activate()
+            if self.health == 0:
+                self.kill()
 
     def update(self,dt):
         self.hit_timer.update()
