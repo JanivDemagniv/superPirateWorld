@@ -10,7 +10,7 @@ from overworld import Overworld
 class Game:
     def __init__(self):
         pygame.init()
-        self.display_surface = pygame.display.set_mode((WINDOW_WIDTH,WINDOW_HIEGHT))
+        self.display_surface = pygame.display.set_mode((WINDOW_WIDTH,WINDOW_HIEGHT),pygame.FULLSCREEN)
         pygame.display.set_caption('Super Pirate World')
         self.clock = pygame.time.Clock()
         self.import_assests()
@@ -104,7 +104,7 @@ class Game:
         while True:
             dt = self.clock.tick() / 1000
             for event in pygame.event.get():
-                if event.type == pygame.QUIT:
+                if event.type == pygame.QUIT or pygame.key.get_pressed()[pygame.K_ESCAPE]:
                     pygame.quit()
                     sys.exit()
             
